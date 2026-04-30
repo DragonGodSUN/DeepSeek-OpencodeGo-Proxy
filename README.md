@@ -1,4 +1,4 @@
-# DeepSeek reasoning_content Proxy
+# DeepSeek OpencodeGo Proxy
 
 解决 CC-switch + OpenCode Zen Go + DeepSeek V4 链路中 `reasoning_content` 必须回传的问题。
 
