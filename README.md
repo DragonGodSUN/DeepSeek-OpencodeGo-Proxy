@@ -1,4 +1,4 @@
-# DeepSeek reasoning_content Proxy
+# DeepSeek OpencodeGo Proxy
 
 通用代理，解决任何客户端通过 DeepSeek API 调用时 `reasoning_content` 必须回传的问题。
 
