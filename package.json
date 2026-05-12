@@ -1,0 +1,16 @@
+{
+  "name": "deepseek-reasoning-proxy",
+  "version": "3.0.0",
+  "type": "module",
+  "description": "Universal proxy that preserves DeepSeek reasoning_content across chat rounds",
+  "main": "proxy.js",
+  "scripts": {
+    "start": "node proxy.js"
+  },
+  "files": [
+    "proxy.js"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
