@@ -40,22 +40,30 @@ node proxy.js
 
 ### 配置
 
-通过环境变量配置：
+**方式一：`config.json`（推荐）**
 
-| 变量 | 默认值 | 说明 |
-|------|--------|------|
-| `TARGET_BASE_URL` | `https://opencode.ai/zen/go` | 上游 API 地址 |
-| `PROXY_PORT` | `3456` | 代理监听端口 |
-| `UPSTREAM_TIMEOUT` | `120000` | 上游超时（毫秒） |
-| `MODEL_MAP` | (无) | 模型名映射，JSON 格式 |
-
-示例：直接对接 DeepSeek API + 模型映射
-
-```bash
-set TARGET_BASE_URL=https://api.deepseek.com/v1
-set MODEL_MAP={"deepseek-v4-flash":"deepseek-v4-pro","gpt-4":"deepseek-v4-pro"}
-node proxy.js
+```json
+{
+  "target_base_url": "https://api.deepseek.com/v1",
+  "proxy_port": 3456,
+  "upstream_timeout": 120000,
+  "model_map": {
+    "deepseek-v4-flash": "deepseek-v4-pro",
+    "gpt-4": "deepseek-v4-pro"
+  }
+}
 ```
+
+**方式二：环境变量**（优先级高于 config.json）
+
+| 变量 | config.json 对应字段 | 说明 |
+|------|---------------------|------|
+| `TARGET_BASE_URL` | `target_base_url` | 上游 API 地址 |
+| `PROXY_PORT` | `proxy_port` | 代理监听端口 |
+| `UPSTREAM_TIMEOUT` | `upstream_timeout` | 上游超时（毫秒） |
+| `MODEL_MAP` | `model_map` | 模型名映射，JSON 字符串 |
+
+环境变量会覆盖 config.json 中的对应项。
 
 ### Session 隔离
 
@@ -88,6 +96,7 @@ node proxy.js
 | 文件 | 说明 |
 |------|------|
 | `proxy.js` | 代理服务主程序 |
+| `config.json` | 配置文件（API 地址、端口、模型映射等） |
 | `package.json` | 项目元信息 |
 | `start.bat` | Windows 启动脚本 |
 

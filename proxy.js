@@ -2,21 +2,31 @@ import http from 'node:http';
 import https from 'node:https';
 import { Transform } from 'node:stream';
 import zlib from 'node:zlib';
+import fs from 'node:fs';
+import { fileURLToPath } from 'node:url';
 
+// Load config.json (env vars override)
+const configPath = fileURLToPath(new URL('config.json', import.meta.url));
+let cfg = {};
+try {
+  cfg = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
+  console.log('Loaded config.json');
+} catch { /* missing/invalid config: use env/defaults */ }
 
-const TARGET_URL = process.env.TARGET_BASE_URL || 'https://opencode.ai/zen/go';
+const TARGET_URL = process.env.TARGET_BASE_URL || cfg.target_base_url || 'https://opencode.ai/zen/go';
 const targetUrlObj = new URL(TARGET_URL);
 const TARGET_HOST = targetUrlObj.hostname;
 const TARGET_PORT = targetUrlObj.port || 443;
 const TARGET_BASE_PATH = targetUrlObj.pathname.replace(/\/+$/, '');
-const PROXY_PORT = parseInt(process.env.PROXY_PORT || '3456', 10);
-const UPSTREAM_TIMEOUT = parseInt(process.env.UPSTREAM_TIMEOUT || '120000', 10);
-const SESSION_TTL = 30 * 60 * 1000; // 30 min inactivity cleanup
+const PROXY_PORT = parseInt(process.env.PROXY_PORT || cfg.proxy_port || '3456', 10);
+const UPSTREAM_TIMEOUT = parseInt(process.env.UPSTREAM_TIMEOUT || cfg.upstream_timeout || '120000', 10);
+const SESSION_TTL = 30 * 60 * 1000;
 
-// Model name mapping: MODEL_MAP='{"deepseek-v4-flash":"deepseek-v4-pro"}'
+// Model name mapping (env MODEL_MAP overrides config model_map)
 let MODEL_MAP = {};
-if (process.env.MODEL_MAP) {
-  try { MODEL_MAP = JSON.parse(process.env.MODEL_MAP); } catch { console.error('Invalid MODEL_MAP JSON'); }
+const mapSource = process.env.MODEL_MAP || (cfg.model_map && JSON.stringify(cfg.model_map));
+if (mapSource) {
+  try { MODEL_MAP = typeof mapSource === 'string' ? JSON.parse(mapSource) : mapSource; } catch { console.error('Invalid MODEL_MAP'); }
 }
 
 // --- Session store ---
