@@ -1,0 +1,6 @@
+{
+  "target_base_url": "https://opencode.ai/zen/go",
+  "proxy_port": 3456,
+  "upstream_timeout": 120000,
+  "model_map": {}
+}

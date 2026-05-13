@@ -1,4 +1,4 @@
-# Changelog — reasoning_content Proxy v2 → v3
+# Changelog — reasoning_content Proxy
 
 ## 版本
 
@@ -6,9 +6,39 @@
 |------|------|------|
 | v1 | 2026-04-26 | 初始版本 |
 | v2 | 2026-04-28 | 初版改 |
-| **v3** | **2026-05-12** | **本次更新：通用化改造** |
+| v3 | 2026-05-12 | 通用化改造 |
+| **v3.1** | **2026-05-13** | **本次更新：config.json 配置文件支持** |
 
-## 概览
+## v3.1 — config.json 配置文件支持
+
+### 新增
+
+**`config.json` 配置文件**
+- 新增 `config.json` 作为首选配置方式，避免每次启动设环境变量
+- 配置项：`target_base_url`、`proxy_port`、`upstream_timeout`、`model_map`
+- `config.json` 不存在或格式错误时静默降级为环境变量/默认值
+
+**双源配置优先级**
+- 环境变量 > `config.json` > 代码默认值
+- `MODEL_MAP` 兼容两种来源：环境变量直接作为 JSON 字符串，`model_map` 从 config 读取后自动序列化
+
+### 变更
+
+| 区域 | v3 | v3.1 |
+|------|----|------|
+| 配置来源 | 仅环境变量 | `config.json` + 环境变量 + 默认值 |
+| `proxy.js` 依赖 | `http`, `https`, `stream`, `zlib` | + `fs`, `url` |
+| `README.md` 配置章节 | 环境变量表格 | 双方式文档：`config.json`（推荐）+ 环境变量 |
+
+### 新文件
+
+- `config.json` — 代理配置文件
+
+---
+
+## v3 — 通用化改造
+
+### 概览
 
 将代理从 **CC-switch 专用** 改造为 **任意 OpenAI 兼容客户端通用**。
 
